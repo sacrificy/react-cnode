@@ -1,0 +1,39 @@
+
+.header-logo{
+  width: 120px;
+  display: block;
+  float: left;
+  margin-top: 8px;
+  margin-right: 20px;
+}
+.header-logo>img{
+  display: block;
+  max-width: 100%;
+}
+.header-input {
+  margin-top: -8px;
+  width: 233px;
+  float: left;
+}
+.header-right{
+  float: right;
+  padding-top: 5px;
+}
+.header-right>.header-item{
+  float: right;
+  box-sizing: border-box;
+  padding: 10px 15px;
+  line-height: 20px;
+  height: 40px;
+  background: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  color: #ccc;
+  font-size: 13px;
+}
+.header-right>.header-item:hover{
+  color: #fff;
+}
+
+
