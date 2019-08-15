@@ -3,24 +3,8 @@ import { Tabs, Card, Input, Button, List, Avatar, Icon } from 'antd'
 import "./style.css"
 import { connect } from 'react-redux';
 import { actions } from './store';
+import { Link, Router, Route } from 'react-router-dom'
 const { TabPane } = Tabs
-const data = [
-  {
-    author: { loginname: "atian25", avatar_url: "https://avatars2.githubusercontent.com/u/227713?v=4&s=120" },
-    create_at: "2019-04-24T03:36:12.582Z",
-    title: "Node 12 值得关注的新特性",
-    reply_count: 55,
-    visit_count: 112187
-
-  }
-];
-
-const user = {
-  loginname: "alsotang",
-  avatar_url: "https://avatars1.githubusercontent.com/u/1147375?v=4&s=120",
-  score: 15565,
-}
-
 const IconText = ({ type, text }) => (
   <span>
     <Icon type={type} style={{ marginRight: 4 }} />
@@ -31,12 +15,13 @@ const IconText = ({ type, text }) => (
 class Home extends React.Component {
 
   componentWillMount() {
-    const { getTopicList, getUserInfo, userName } = this.props
-    getTopicList(1, 'ask', 50, false)
+    const { getTopicList } = this.props
+    getTopicList(1, null, 50, false)
   }
 
   render() {
     const { user, userName, getUserInfo } = this.props
+    const tabs = ['全部','精华','分享']
     if (!user && userName) getUserInfo(userName)
     return (
       <div className="main">
@@ -57,7 +42,8 @@ class Home extends React.Component {
 
         <Card bordered={false} style={{ width: 1095, float: "left" }}>
           <Tabs type="card">
-            <TabPane tab="全部" key="1">
+            {tabs.map((item)=>{return(
+              <TabPane tab={item} key={item}>
               {
                 this.props.data ? (
                   <List
@@ -67,7 +53,7 @@ class Home extends React.Component {
                       <List.Item>
                         <List.Item.Meta
                           avatar={<Avatar src={item.author.avatar_url} />}
-                          title={<a href="https://ant.design">{item.title}</a>}
+                          title={<Link to={`/topic/${item.id}`}>{item.title}</Link>}
                         />
                         <div>
                           <IconText type="edit-o" text={item.reply_count} key="list-vertical-edit-o" />
@@ -80,12 +66,8 @@ class Home extends React.Component {
               }
 
             </TabPane>
-            <TabPane tab="精华" key="2">
-              Content of Tab Pane 2
-            </TabPane>
-            <TabPane tab="分享" key="3">
-              Content of Tab Pane 3
-            </TabPane>
+            )}
+            )}
           </Tabs>
         </Card>
       </div>
@@ -94,7 +76,7 @@ class Home extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  data: state.home.data,
+  allTopic: state.home.data,
   userName: state.login.user,
   user: state.home.userInfo
 });

@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router-dom'
 import Header from '../../components/Header';
 import Login from '../../containers/Login';
 import Home from '../../containers/Home';
+import Detail from '../../containers/Detail';
 
 class Index extends React.Component {
 
@@ -13,7 +14,7 @@ class Index extends React.Component {
         <Header />
         <Switch>
           <Route path="/" exact component={Home} />
-          {/* <Route path="/topic/:id" exact component={Detail} /> */}
+          <Route path="/topic/:id" exact component={Detail} />
           <Route path="/login" exact component={Login} />
         </Switch>
       </div>
