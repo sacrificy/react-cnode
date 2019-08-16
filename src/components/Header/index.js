@@ -24,7 +24,7 @@ class Header extends React.Component {
             {isLogin
               ? <input type="button" onClick={logout} className="header-item" value="清除登录数据" />
               : <Link className="header-item" to="/login">登录</Link>}
-            <Link className="header-item" to="/">设置1</Link>
+            <Link className="header-item" to="/">设置</Link>
             <Link className="header-item" to="/">关于</Link>
             <Link className="header-item" to="/">API</Link>
             <Link className="header-item" to="/">新手入门</Link>
