@@ -8,11 +8,17 @@ export const changeLoginInfo = info => ({
   payload: info,
 });
 
+export const login = input =>({
+  type: constants.LOGIN,
+  input,
+})
+
 export const logout = () => ({
   type: constants.LOGOUT,
 });
 
 export const loginWithToken = token => (dispatch) => {
+
   return req.post('/accesstoken ', {
       accesstoken: token,
     }).then(response => {
@@ -31,6 +37,7 @@ export const loginWithToken = token => (dispatch) => {
           id,
           score
         },
+        token:token
       };
       localStorage.setItem('token', token);
   

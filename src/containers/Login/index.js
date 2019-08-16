@@ -7,10 +7,6 @@ import { connect } from 'react-redux';
 import { actions } from './store';
 
 class Login extends React.Component {
-  state = {
-    token: '',
-  }
-
   componentDidMount() {
     const { loginByToken } = this.props;
     const token = localStorage.getItem('token');
@@ -18,8 +14,7 @@ class Login extends React.Component {
   }
 
   render() {
-    const { token } = this.state;
-    const { loginByToken, isLogin } = this.props;
+    const { loginByToken, isLogin, token, login } = this.props;
     if (isLogin) return <Redirect to="/" />;
     return (
       <div className="main">
@@ -27,7 +22,7 @@ class Login extends React.Component {
           <div>这是给皮皮写的一个项目</div>
         </Card>
         <Card title="登录" bordered={false} style={{ width: 1095,float:"left" }}>
-          <Input value={token} onChange={evt => this.setState({ token: evt.target.value })} placeholder="access-token" />
+          <Input value={token} onChange= {evt => login(evt.target.value )} placeholder="access-token" />
           <Button type="primary" onClick={() => loginByToken(token)} block style={{marginTop: "50px"}}>登录</Button>
         </Card>
       </div>
@@ -36,6 +31,7 @@ class Login extends React.Component {
 }
 
 const mapStateToProps = $state => ({
+  token: $state.login.token,
   isLogin: $state.login.isLogin
 });
 
@@ -43,6 +39,9 @@ const mapDispatchToProps = dispatch => ({
   loginByToken: token => {
     dispatch(actions.loginWithToken(token));
   },
+  login: input => {
+    dispatch(actions.login(input))
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
