@@ -3,7 +3,7 @@ import { Tabs, Card, Input, Button, List, Avatar, Icon } from 'antd'
 import './index.css'
 import {actions} from './store'
 import {connect} from 'react-redux'
-
+import UserPanel from '../../components/UserPanel'
 class Detail extends React.Component {
 
 	componentDidMount(){
@@ -33,21 +33,8 @@ class Detail extends React.Component {
 		};
 		return (
 			<div>
-				<Card className='right_card' title="作者" bordered={false} style={{ width: 290, float: "right" }}>
-					{
-						user && (
-							<div>
-								<span style={{ marginRight: '5px' }}>
-									<Avatar src={user.avatar_url} />
-								</span>
-								{user.githubUsername}
-								<br />
-								{'积分：' + user.score}
-							</div>
-						)
-					}
-				</Card>
-				<Card className='left_card' bordered={false} style={{ width: 1095, float: "left" }}>
+				<UserPanel author={user} title={'作者'} />
+				<Card className='left_card' bordered={false} >
 					{
 						data ? (
 							<div>

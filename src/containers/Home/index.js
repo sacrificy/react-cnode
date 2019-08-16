@@ -4,6 +4,7 @@ import "./style.css"
 import { connect } from 'react-redux';
 import { actions } from './store';
 import { Link } from 'react-router-dom'
+import UserPanel from '../../components/UserPanel'
 const IconText = ({ type, text }) => (
   <span>
     <Icon type={type} style={{ marginRight: 4 }} />
@@ -50,9 +51,9 @@ class Home extends React.Component {
     }
     if (!user && userName) getUserInfo(userName)
     return (
-      <div className="main">
-        <UserAvatar user={user} />
-        <Card bordered={false} style={{ width: 1095, float: "left" }}>
+      <div>
+        <UserPanel author={user} title={'个人信息'}/>
+        <Card className='left_card' bordered={false}>
           {tabs.map(item => {
             return item.value === curTab ?
               <Tag color="#87d068" key={item.value} onClick={() => hendleClickTab(item.value)}>{item.label}</Tag> :
@@ -92,25 +93,6 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-function UserAvatar(props) {
-  const user = props.user
-  return (<Card title="个人信息" bordered={false} style={{ width: 290, float: "right" }}>
-    {user ?
-      (
-        <div>
-          <span style={{ marginRight: '5px' }}>
-            <Avatar src={user.avatar_url} />
-          </span>
-          {user.githubUsername}
-          <br />
-          {'积分：' + user.score}
-        </div>
-      ) :
-      <Link to="/login">
-        <Button type="primary" block>登录</Button>
-      </Link>}
-  </Card>)
-}
 
 function TopicList(props) {
   const data = props.data
