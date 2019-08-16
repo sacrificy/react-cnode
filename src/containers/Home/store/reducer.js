@@ -1,7 +1,6 @@
 import * as constants from './constants'
 
 const defaultState = {
-    userInfo: null,
     data: null,
     curPage: 1,
     curTab: 'all'
@@ -9,11 +8,7 @@ const defaultState = {
 
 export default (state = defaultState, action) => {
     switch (action.type) {
-      case constants.SET_USER_INFO: {
-          let newState = JSON.parse(JSON.stringify(state))
-          newState.userInfo = action.userInfo
-          return newState
-      }
+      
       case constants.SET_TOPIC_LIST: {
         let newState = JSON.parse(JSON.stringify(state))
         newState.data = action.topics

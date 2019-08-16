@@ -5,3 +5,5 @@ export const GET_TOPIC_DETAILS = 'detail/getTopicDetails'
 export const SET_USER_INFO = 'detail/setUserInfo'
 
 export const GET_USER_INFO = 'detail/getUserInfo'
+
+export const SET_COLLECT = 'detail/setCollect'

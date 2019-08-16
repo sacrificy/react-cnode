@@ -15,6 +15,12 @@ export default (state = defaultState, action) => {
         token: action.payload.token,
       };
     }
+    case constants.SET_USER_INFO: {
+      let newState = JSON.parse(JSON.stringify(state))
+      newState.user = action.userInfo
+      return newState
+    } 
+
     case constants.LOGOUT: {
       return {
         isLogin: null,

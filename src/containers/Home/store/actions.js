@@ -3,18 +3,6 @@ import {
 } from '../../../utils';
 import * as constants from './constants';
 
-export const setUserInfo = info => ({
-  type: constants.SET_USER_INFO,
-  userInfo: info,
-});
-
-export const getUserInfo = username => (dispatch) => {
-  return req.get(`/user/${username.name}`).then(response => {
-    const { data } = response
-    dispatch(setUserInfo(data.data))
-  })
-}
-
 export const setTopicList = info => {
   return {
     type: constants.SET_TOPIC_LIST,

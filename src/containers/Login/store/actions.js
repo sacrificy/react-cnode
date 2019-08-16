@@ -8,6 +8,20 @@ export const changeLoginInfo = info => ({
   payload: info,
 });
 
+export const getUserInfo = username => (dispatch) => {
+  return req.get(`/user/${username}`).then(response => {
+    const { data } = response
+    dispatch(setUserInfo(data.data))
+  })
+}
+
+export const setUserInfo = info => {
+  return ({
+    type: constants.SET_USER_INFO,
+    userInfo: info,
+  })
+};
+
 export const login = input =>({
   type: constants.LOGIN,
   input,
@@ -23,11 +37,11 @@ export const loginWithToken = token => (dispatch) => {
       accesstoken: token,
     }).then(response => {
       const {data} = response
+      dispatch(getUserInfo(data.loginname))
       const {
         loginname,
         id,
         avatar_url,
-        score
       } = data;
       const loginStatus = {
         isLogin: true,
@@ -35,7 +49,6 @@ export const loginWithToken = token => (dispatch) => {
           name: loginname,
           avatar: avatar_url,
           id,
-          score
         },
         token:token
       };

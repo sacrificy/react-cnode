@@ -17,7 +17,7 @@ export const getTopicDetails = topicId => (dispatch) => {
 
 export const setUserInfo = info => ({
 	type: constants.SET_USER_INFO,
-	userInfo: info,
+	authorInfo: info,
 });
 
 export const getUserInfo = username => (dispatch) => {
@@ -25,4 +25,37 @@ export const getUserInfo = username => (dispatch) => {
 		const { data } = response
 		dispatch(setUserInfo(data.data))
 	})
+}
+
+export const judgeCollect = (loginname,topicId) => (dispatch)=>{
+	return req.get(`/topic_collect/${loginname}`).then(response => {
+		const {data} = response
+		const colList = data.data
+		let isCollect = false
+		colList.forEach(element => {
+			if(element.id === topicId){
+				isCollect = true
+			} 
+		});
+		return dispatch(setCollect(isCollect))
+	}) 
+}
+
+export const setCollect = isCollect => ({
+	type: constants.SET_COLLECT,
+	isCollect: isCollect
+})
+
+export const changeCollect = (token,topic,collect) => dispatch =>{
+	if(collect){
+		req.post(`/topic_collect/collect`,{
+			accesstoken : token,
+			topic_id : topic,
+		}).then(()=>dispatch(setCollect(true)))
+	}else {
+		req.post(`/topic_collect/de_collect`,{
+			accesstoken : token,
+			topic_id : topic,
+		}).then(()=>dispatch(setCollect(false)))
+	}
 }

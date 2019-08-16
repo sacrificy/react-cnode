@@ -4,6 +4,9 @@ import './index.css'
 import {actions} from './store'
 import {connect} from 'react-redux'
 import UserPanel from '../../components/UserPanel'
+
+let hasJudged = false
+
 class Detail extends React.Component {
 
 	componentDidMount(){
@@ -12,8 +15,14 @@ class Detail extends React.Component {
 	}
 
 	render() {
-		const {data,user} = this.props
-		if (!user && data) this.props.getUserInfo(data.author.loginname)
+		const {data,author,user,token,isCollect,judgeCollect,getAuthorInfo,changeCollect} = this.props
+		if (!author && data) getAuthorInfo(data.author.loginname)
+
+		if (user && data && !hasJudged) {
+			judgeCollect(user.name,data.id)
+			hasJudged = true
+		}
+
 		const now = new Date().getTime()
 		const CreateTime = ( now, create ) => {
 			const differ = (now-create)/1000
@@ -33,8 +42,8 @@ class Detail extends React.Component {
 		};
 		return (
 			<div>
-				<UserPanel author={user} title={'作者'} />
-				<Card className='left_card' bordered={false} >
+				<UserPanel author={author} title={'作者'} />
+				<Card className='left_card' bordered={false}>
 					{
 						data ? (
 							<div>
@@ -48,7 +57,11 @@ class Detail extends React.Component {
 										<li>作者{data.author.loginname}</li>
 										<li>{data.visit_count}次浏览</li>
 									</ul>
-									<Button style={{float:"right"}}>收藏</Button>
+									{(isCollect
+										?<Button style={{float:"right"}} onClick={()=>changeCollect(token,data.id,false)}>取消收藏</Button>
+										:<Button style={{float:"right"}} onClick={()=>changeCollect(token,data.id,true)}>收藏</Button>
+									)}
+									
 								</div>
 								<hr/>
 								<div dangerouslySetInnerHTML={{__html: data.content}}>
@@ -63,12 +76,17 @@ class Detail extends React.Component {
 }
 
 const mapStateToProps = state => ({
+	isCollect: state.detail.isCollect,
 	data: state.detail.topicDetails,
-	user: state.detail.userInfo,
+	author: state.detail.authorInfo,
+	user: state.login.user,
+	token: state.login.token
 })
 
 const mapDispatchToProps = dispatch => ({
 	getTopicDetails: (topicId) => dispatch(actions.getTopicDetails(topicId)),
-	getUserInfo: (userName) => dispatch(actions.getUserInfo(userName))
+	getAuthorInfo: (userName) => dispatch(actions.getUserInfo(userName)),
+	judgeCollect: (loginname,topicId) => dispatch(actions.judgeCollect(loginname,topicId)),
+	changeCollect: (token, topicId, collect) => dispatch(actions.changeCollect(token,topicId,collect))
 })
 export default connect(mapStateToProps,mapDispatchToProps)(Detail) 

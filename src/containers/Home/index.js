@@ -2,15 +2,10 @@ import React from 'react'
 import { Card, List, Avatar, Icon, Tag, Pagination, Button } from 'antd'
 import "./style.css"
 import { connect } from 'react-redux';
-import { actions } from './store';
-import { Link } from 'react-router-dom'
+import { getTopicList,changeCurPage,changeCurTab } from './store/actions';
+import { getUserInfo } from '../Login/store/actions'
 import UserPanel from '../../components/UserPanel'
-const IconText = ({ type, text }) => (
-  <span>
-    <Icon type={type} style={{ marginRight: 4 }} />
-    {text}
-  </span>
-);
+import TopicList from '../../components/TopicList'
 
 class Home extends React.Component {
 
@@ -20,8 +15,9 @@ class Home extends React.Component {
   }
 
   render() {
-    const { home, userName, getUserInfo, getTopicList, changeCurTab, changeCurPage } = this.props
-    const { userInfo: user, data, curPage, curTab } = home
+    const { home, login, getUserInfo, getTopicList, changeCurTab, changeCurPage } = this.props
+    const { data, curPage, curTab } = home
+    const { user } = login
     const tabs = [
       {
         label: '全部',
@@ -49,7 +45,7 @@ class Home extends React.Component {
       getTopicList(1, tag, 15, false)
       changeCurPage(1)
     }
-    if (!user && userName) getUserInfo(userName)
+    // if (!user && userName) getUserInfo(userName)
     return (
       <div>
         <UserPanel author={user} title={'个人信息'}/>
@@ -75,43 +71,22 @@ class Home extends React.Component {
 
 const mapStateToProps = state => ({
   home: state.home,
-  userName: state.login.user,
+  login: state.login,
 });
 
 const mapDispatchToProps = dispatch => ({
   getTopicList: (page, tab, limit, mdrender) => {
-    dispatch(actions.getTopicList(page, tab, limit, mdrender));
+    dispatch( getTopicList(page, tab, limit, mdrender));
   },
   getUserInfo: (userName) => {
-    dispatch(actions.getUserInfo(userName))
+    dispatch( getUserInfo(userName))
   },
   changeCurPage: (page) => {
-    dispatch(actions.changeCurPage(page))
+    dispatch( changeCurPage(page))
   },
   changeCurTab: (tab) => {
-    dispatch(actions.changeCurTab(tab))
+    dispatch( changeCurTab(tab))
   }
 });
-
-
-function TopicList(props) {
-  const data = props.data
-  return (<List
-    itemLayout="horizontal"
-    dataSource={data}
-    renderItem={item => (
-      <List.Item>
-        <List.Item.Meta
-          avatar={<Avatar src={item.author.avatar_url} />}
-          title={<Link to={`/topic/${item.id}`}>{item.title}</Link>}
-        />
-        <div>
-          <IconText type="edit-o" text={item.reply_count} key="list-vertical-edit-o" />
-          <IconText type="fire-o" text={item.visit_count} key="list-vertical-fire-o" />
-        </div>
-      </List.Item>
-    )}
-  />)
-}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)
