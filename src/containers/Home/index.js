@@ -1,10 +1,9 @@
 import React from 'react'
-import { Tabs, Card, Input, Button, List, Avatar, Icon } from 'antd'
+import { Card, List, Avatar, Icon, Tag, Pagination, Button } from 'antd'
 import "./style.css"
 import { connect } from 'react-redux';
 import { actions } from './store';
-import { Link, Router, Route } from 'react-router-dom'
-const { TabPane } = Tabs
+import { Link } from 'react-router-dom'
 const IconText = ({ type, text }) => (
   <span>
     <Icon type={type} style={{ marginRight: 4 }} />
@@ -16,59 +15,57 @@ class Home extends React.Component {
 
   componentWillMount() {
     const { getTopicList } = this.props
-    getTopicList(1, null, 50, false)
+    getTopicList(1, null, 15, false)
   }
 
   render() {
-    const { user, userName, getUserInfo } = this.props
-    const tabs = ['全部','精华','分享']
+    const { home, userName, getUserInfo, getTopicList, changeCurTab, changeCurPage } = this.props
+    const { userInfo: user, data, curPage, curTab } = home
+    const tabs = [
+      {
+        label: '全部',
+        value: 'all',
+      },
+      {
+        label: '精华',
+        value: 'good',
+      },
+      {
+        label: '分享',
+        value: 'share',
+      },
+      {
+        label: '问答',
+        value: 'ask',
+      },
+      {
+        label: '招聘',
+        value: 'job',
+      }
+    ]
+    const hendleClickTab = (tag) => {
+      changeCurTab(tag)
+      getTopicList(1, tag, 15, false)
+      changeCurPage(1)
+    }
     if (!user && userName) getUserInfo(userName)
     return (
       <div className="main">
-        <Card title="个人信息" bordered={false} style={{ width: 290, float: "right" }}>
-          {
-            user && (
-              <div>
-                <span style={{ marginRight: '5px' }}>
-                  <Avatar src={user.avatar_url} />
-                </span>
-                {user.githubUsername}
-                <br />
-                {'积分：' + user.score}
-              </div>
-            )
-          }
-        </Card>
-
+        <UserAvatar user={user} />
         <Card bordered={false} style={{ width: 1095, float: "left" }}>
-          <Tabs type="card">
-            {tabs.map((item)=>{return(
-              <TabPane tab={item} key={item}>
-              {
-                this.props.data ? (
-                  <List
-                    itemLayout="horizontal"
-                    dataSource={this.props.data}
-                    renderItem={item => (
-                      <List.Item>
-                        <List.Item.Meta
-                          avatar={<Avatar src={item.author.avatar_url} />}
-                          title={<Link to={`/topic/${item.id}`}>{item.title}</Link>}
-                        />
-                        <div>
-                          <IconText type="edit-o" text={item.reply_count} key="list-vertical-edit-o" />
-                          <IconText type="fire-o" text={item.visit_count} key="list-vertical-fire-o" />
-                        </div>
-                      </List.Item>
-                    )}
-                  />
-                ) : <Icon type="loading" />
-              }
-
-            </TabPane>
-            )}
-            )}
-          </Tabs>
+          {tabs.map(item => {
+            return item.value === curTab ?
+              <Tag color="#87d068" key={item.value} onClick={() => hendleClickTab(item.value)}>{item.label}</Tag> :
+              <Tag color="green" key={item.value} onClick={() => hendleClickTab(item.value)}>{item.label}</Tag>
+          })}
+          {data ? <TopicList data={data} /> : <Icon type="loading" />}
+          <Pagination defaultCurrent={1} current={curPage} total={250}
+            onChange={
+              (page) => {
+                getTopicList(page, curTab, 15, false)
+                changeCurPage(page)
+              }}
+          />
         </Card>
       </div>
     )
@@ -76,9 +73,8 @@ class Home extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  allTopic: state.home.data,
+  home: state.home,
   userName: state.login.user,
-  user: state.home.userInfo
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -87,7 +83,53 @@ const mapDispatchToProps = dispatch => ({
   },
   getUserInfo: (userName) => {
     dispatch(actions.getUserInfo(userName))
+  },
+  changeCurPage: (page) => {
+    dispatch(actions.changeCurPage(page))
+  },
+  changeCurTab: (tab) => {
+    dispatch(actions.changeCurTab(tab))
   }
 });
+
+function UserAvatar(props) {
+  const user = props.user
+  return (<Card title="个人信息" bordered={false} style={{ width: 290, float: "right" }}>
+    {user ?
+      (
+        <div>
+          <span style={{ marginRight: '5px' }}>
+            <Avatar src={user.avatar_url} />
+          </span>
+          {user.githubUsername}
+          <br />
+          {'积分：' + user.score}
+        </div>
+      ) :
+      <Link to="/login">
+        <Button type="primary" block>登录</Button>
+      </Link>}
+  </Card>)
+}
+
+function TopicList(props) {
+  const data = props.data
+  return (<List
+    itemLayout="horizontal"
+    dataSource={data}
+    renderItem={item => (
+      <List.Item>
+        <List.Item.Meta
+          avatar={<Avatar src={item.author.avatar_url} />}
+          title={<Link to={`/topic/${item.id}`}>{item.title}</Link>}
+        />
+        <div>
+          <IconText type="edit-o" text={item.reply_count} key="list-vertical-edit-o" />
+          <IconText type="fire-o" text={item.visit_count} key="list-vertical-fire-o" />
+        </div>
+      </List.Item>
+    )}
+  />)
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)
