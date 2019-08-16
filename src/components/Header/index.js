@@ -8,10 +8,10 @@ import { Layout, Input, Icon } from 'antd'
 import { actions as loginActions } from '../../containers/Login/store';
 
 class Header extends React.Component {
-
   render() {
     const { isLogin, logout } = this.props;
     return (
+      
       <Layout>
         <Layout.Header style={{ height: "50px", backgroundColor: "#444" }}>
           <Link className="header-logo" to="/">
@@ -24,7 +24,7 @@ class Header extends React.Component {
             {isLogin
               ? <input type="button" onClick={logout} className="header-item" value="清除登录数据" />
               : <Link className="header-item" to="/login">登录</Link>}
-            <Link className="header-item" to="/">设置</Link>
+            <Link className="header-item" to="/">设置1</Link>
             <Link className="header-item" to="/">关于</Link>
             <Link className="header-item" to="/">API</Link>
             <Link className="header-item" to="/">新手入门</Link>
