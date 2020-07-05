@@ -8,6 +8,9 @@ const IconText = ({ type, text }) => (
   <span>
     <Icon type={type} style={{ marginRight: 4 }} />
 	asdasdasd
+	askdasjdlakjsdlaksdjaalakjd
+	啊实打实的咯技术的回家
+	asdaskdjhaksjd
     {text}
   </span>
 );
