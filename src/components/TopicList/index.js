@@ -7,6 +7,7 @@ import { Avatar,Icon,List } from 'antd'
 const IconText = ({ type, text }) => (
   <span>
     <Icon type={type} style={{ marginRight: 4 }} />
+	asdasdasd
     {text}
   </span>
 );
